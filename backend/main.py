@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from backend.routes.upload import router as upload_router
-
+from backend.routes.test import router as test_router
+from backend.routes.vector_test import router as vector_router
+from backend.routes.investigation import router as investigation_router
 
 app = FastAPI(
     title="INDUS AI",
@@ -8,6 +10,10 @@ app = FastAPI(
     version="1.0.0"
 )
 app.include_router(upload_router)
+app.include_router(test_router)
+app.include_router(vector_router)
+app.include_router(investigation_router)
+
 
 @app.get("/")
 def home():

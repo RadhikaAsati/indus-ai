@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, File
+from backend.services.pdf_reader import extract_text
 import shutil
 import os
 
@@ -16,7 +17,11 @@ async def upload_file(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    text = extract_text(file_path)
+
     return {
         "message": "File uploaded successfully!",
-        "filename": file.filename
+        "filename": file.filename,
+        "characters": len(text),
+        "preview": text[:500]
     }
