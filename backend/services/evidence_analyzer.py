@@ -1,4 +1,4 @@
-import re
+from backend.services.entity_extractor import extract_entities
 
 
 def analyze_evidence(investigation_packet):
@@ -6,16 +6,17 @@ def analyze_evidence(investigation_packet):
     Analyze retrieved evidence and extract useful industrial information.
     """
 
-    machine_pattern = r"[A-Z]{2,5}-\d+"
-
-    date_pattern = (
-        r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b"
-    )
-
     analyzed_documents = {}
 
-    total_machines = set()
-    total_dates = set()
+    summary_entities = {
+        "machines": set(),
+        "work_orders": set(),
+        "issue_ids": set(),
+        "departments": set(),
+        "people": set(),
+        "dates": set(),
+        "times": set()
+    }
 
     for document_name, chunks in investigation_packet["documents"].items():
 
@@ -25,27 +26,20 @@ def analyze_evidence(investigation_packet):
 
             content = chunk["content"]
 
-            machines = re.findall(machine_pattern, content)
+            entities = extract_entities(content)
 
-            dates = re.findall(date_pattern, content)
-
-            total_machines.update(machines)
-
-            total_dates.update(dates)
+            # Collect entities from all chunks
+            for key, values in entities.items():
+                summary_entities[key].update(values)
 
             analyzed_chunks.append(
                 {
                     **chunk,
-
-                    "machines": machines,
-
-                    "dates": dates,
-
+                    **entities,
                     "contains_numbers": any(
                         c.isdigit()
                         for c in content
                     ),
-
                     "word_count": len(content.split())
                 }
             )
@@ -53,18 +47,14 @@ def analyze_evidence(investigation_packet):
         analyzed_documents[document_name] = analyzed_chunks
 
     return {
-
         "question": investigation_packet["question"],
 
         "summary": investigation_packet["summary"],
 
-        "machines_detected": sorted(
-            list(total_machines)
-        ),
-
-        "dates_detected": sorted(
-            list(total_dates)
-        ),
+        "entities": {
+            key: sorted(list(values))
+            for key, values in summary_entities.items()
+        },
 
         "documents": analyzed_documents
     }
