@@ -1,0 +1,68 @@
+DAILY PRODUCTION REPORT
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Report Date     : 07-Nov-2024
+Prepared By     : Anita Verma (Production Supervisor)
+Reviewed By     : G. Iyer (Production Manager)
+Shift Coverage  : All Shifts (Morning / Evening / Night)
+================================================================================
+
+PRODUCTION SUMMARY — PUMP LINE 2:
+--------------------------------------------------------------------------------
+                    | Morning Shift | Evening Shift | Night Shift | Day Total
+--------------------|---------------|---------------|-------------|----------
+Planned Output      | 60 units      | 60 units      | 40 units    | 160 units
+Actual Output       | 58 units      | 61 units      | 39 units    | 158 units
+Variance            | -2            | +1            | -1          | -2 units
+Rejection / Rework  | 0             | 1 (rework)    | 0           | 1
+--------------------------------------------------------------------------------
+
+BATCH STATUS:
+  PL2-NOV-042 : COMPLETED — 120 units produced (across 06-Nov & 07-Nov shifts)
+                QA sampling initiated — ref QIR pending (Vikram Singh, QA)
+  PL2-NOV-043 : STARTED — Morning shift 07-Nov. 38 units completed by day end.
+
+--------------------------------------------------------------------------------
+MACHINE / LINE STATUS:
+  HP-05 (Hydraulic Press)
+    Status  : Operational from 06-Nov-2024 13:30.
+    Note    : Full hydraulic fluid change completed 07-Nov morning
+              (after delivery from Bharat Lubricants — PO-2024-0712).
+              Pressure stable at 220 bar all shifts. No issues.
+
+  Conveyor C-04
+    Status  : Operational. No issues.
+
+  CNC Machine M-12
+    Status  : Operational (running shaft batch SHF-NOV-018, separate from Pump
+              Line 2). No issues today (breakdown on 08-Nov not yet occurred).
+
+  Compressor CP-03
+    Status  : Operational. Panel latch repaired by Rajesh Sharma — 06-Nov.
+
+--------------------------------------------------------------------------------
+MATERIAL STATUS:
+  Casting blanks (CB-14A) : Adequate stock for 2 more days of production.
+                             Indent to be raised by stores — 08-Nov.
+  Sealing Rings (SEAL-NIT-48): 120 Nos. in stock. Sufficient.
+  Hydraulic Fluid (LUB-HYD-46): Replenished 07-Nov (50 Ltrs received).
+                                  Current stock after PM use: 38 Ltrs.
+
+--------------------------------------------------------------------------------
+QUALITY NOTES:
+  1 rework unit from PL2-NOV-042 (evening shift) — surface finish marginal.
+  QA informed. Rework completed in-shift. Accepted by operator inspection.
+  Batch PL2-NOV-041 rework units (2 Nos.) — QA cleared both. Released.
+
+--------------------------------------------------------------------------------
+PLANNED FOR TOMORROW (08-Nov-2024):
+  - Continue batch PL2-NOV-043 on Pump Line 2 (target: 80 units)
+  - CNC M-12: Complete shaft batch SHF-NOV-018 (approx. 35 units remaining)
+  - Maintenance: Ram seal replacement on HP-05 (Rajesh Sharma)
+
+--------------------------------------------------------------------------------
+Production Supervisor Sign : Anita Verma
+Date                       : 07-Nov-2024
+Production Manager Sign    : G. Iyer
+Date                       : 07-Nov-2024
+================================================================================

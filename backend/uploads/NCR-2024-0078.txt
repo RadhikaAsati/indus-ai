@@ -1,0 +1,77 @@
+NON-CONFORMANCE REPORT
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+NCR No.         : NCR-2024-0078
+Date Raised     : 08-Nov-2024
+Raised By       : Vikram Singh (Quality Engineer)
+Department      : Quality Assurance
+Related QIR     : QIR-2024-0397 (Batch PL2-NOV-042)
+Product         : Industrial Pump Body (Type PB-7)
+Batch ID        : PL2-NOV-042
+Batch Qty       : 120 units
+Line            : Pump Line 2
+================================================================================
+
+DESCRIPTION OF NON-CONFORMANCE:
+  During routine QA inspection of batch PL2-NOV-042, surface finish (Ra)
+  parameter was found out of specification in 4 of 10 sampled units.
+
+  Specified limit : Ra ≤ 3.2 µm
+  Measured values : 3.4 µm, 3.5 µm, 3.6 µm, 3.4 µm (4 units)
+  Remaining 6 units : within specification (2.5 – 3.1 µm)
+
+  Additionally, 2 units showed minor flatness deviation on mating face:
+  Specified limit : ≤ 0.05 mm
+  Measured values : 0.06 mm, 0.08 mm
+
+  This represents a worsening trend from batch PL2-NOV-041 (QIR-2024-0391)
+  where 2 of 10 samples were marginal on surface finish and 1 was marginal on
+  flatness. The trend is escalating.
+
+--------------------------------------------------------------------------------
+POTENTIAL CAUSE (Initial Assessment):
+  Surface finish and flatness deviations on pressed components are typically
+  influenced by:
+  a) Pressing pressure consistency — HP-05 experienced pressure fluctuation on
+     04-Nov-2024 (MWO-2024-0843). Although pressure was corrected on 05-Nov,
+     the root cause of valve drift was not formally confirmed (ref: internal
+     email 06-Nov-2024, Rajesh Sharma to K. Narayanan).
+  b) Tooling wear — pressing die condition not recently inspected.
+  c) Raw material variation — casting blank quality from current lot.
+
+  Formal root cause analysis not yet completed. Immediate containment initiated.
+
+--------------------------------------------------------------------------------
+IMMEDIATE CONTAINMENT:
+  - Batch PL2-NOV-042: 120 units placed ON HOLD pending 100% inspection.
+  - 100% inspection of surface finish and flatness to be completed by
+    Vikram Singh and one additional QA inspector by 09-Nov-2024.
+  - Production of batch PL2-NOV-043 to continue but with enhanced in-process
+    checks: surface finish to be verified every 20 units (vs. routine end-of-
+    batch sampling).
+
+--------------------------------------------------------------------------------
+DISPOSITION OF NON-CONFORMING UNITS (to be confirmed after 100% inspection):
+  [ ] Accept as-is (if functionally acceptable — customer to be consulted)
+  [x] Rework (surface regrind where possible)
+  [ ] Scrap
+  [ ] Return to supplier
+
+--------------------------------------------------------------------------------
+ROOT CAUSE ANALYSIS DUE DATE : 12-Nov-2024
+CORRECTIVE ACTION DUE DATE   : 15-Nov-2024
+Assigned To                  : Vikram Singh (QA) + Rajesh Sharma (Maintenance)
+
+--------------------------------------------------------------------------------
+Raised By       : Vikram Singh
+Sign            : Vikram Singh
+Date            : 08-Nov-2024
+
+Acknowledged By : Anita Verma (Production)
+Sign            : Anita Verma
+Date            : 08-Nov-2024
+
+Acknowledged By : K. Narayanan (Maintenance)
+Sign            : K. Narayanan
+Date            : 08-Nov-2024
+================================================================================

@@ -1,0 +1,38 @@
+INVENTORY ISSUE SLIP
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Issue Slip No.  : IS-2024-1163
+Date            : 08-Nov-2024
+Time            : 11:10
+Issued By       : Mohit Patel (Store Manager)
+Issued To       : Rajesh Sharma (Maintenance Engineer)
+Department      : Maintenance
+Purpose         : Emergency top-up — CNC Machine M-12 coolant (breakdown BDL-2024-0194)
+Authorised By   : K. Narayanan (Maintenance Manager) — verbal authorisation,
+                  confirmed by phone at 11:05
+================================================================================
+
+ITEMS ISSUED:
+--------------------------------------------------------------------------------
+S.No | Item Description                  | Part No.     | UOM | Qty Requested | Qty Issued | Bin Location
+-----|-----------------------------------|--------------|-----|---------------|------------|-------------
+1    | Water-Soluble Coolant Conc. SOL-07| COOL-SOL-07  | Ltr | 12            | 12         | WH-C / R07
+2    | pH Test Strips (coolant)          | TEST-PH-COOL | Pkt | 1             | 1          | WH-C / R08
+--------------------------------------------------------------------------------
+
+NOTES:
+  - Urgency: Machine M-12 tripped on spindle overload (fault E-047) due to
+    low coolant level. Issue slip raised on emergency basis.
+  - COOL-SOL-07 stock after this issue: 28 Ltrs remaining.
+    Current consumption rate appears elevated on M-12 — Mohit Patel to flag
+    for purchase review if trend continues.
+  - Written authorisation from K. Narayanan to follow by end of day.
+
+STOCK BALANCE AFTER ISSUE:
+  COOL-SOL-07 (Water-Soluble Coolant SOL-07) : 28 Ltrs
+
+--------------------------------------------------------------------------------
+Receiver Signature  : Rajesh Sharma
+Store Manager Sign  : Mohit Patel
+Date                : 08-Nov-2024
+================================================================================

@@ -1,0 +1,60 @@
+EQUIPMENT INSPECTION REPORT
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Inspection Report No. : EIR-2024-0229
+Date                  : 10-Nov-2024
+Equipment             : Conveyor C-04
+Asset ID              : EQ-CNV-004
+Location              : Shop Floor B — connecting Bay 2 to Bay 4
+Inspected By          : Rajesh Sharma (Maintenance Engineer)
+Type of Inspection    : Routine Monthly Inspection
+Last Inspection Date  : 12-Oct-2024
+================================================================================
+
+INSPECTION CHECKLIST:
+--------------------------------------------------------------------------------
+S.No | Component                        | Condition     | Remarks
+-----|----------------------------------|---------------|---------------------------
+1    | Belt surface — wear & cracks     | Satisfactory  | Minor surface glazing at centre section. No cracks. Monitor.
+2    | Belt tension                     | Satisfactory  | Tension within spec. No adjustment needed.
+3    | Belt alignment (tracking)        | Satisfactory  | Slight drift to left at head pulley. Adjusted during inspection.
+4    | Head pulley — bearing condition  | Satisfactory  | No abnormal noise. Grease applied.
+5    | Tail pulley — bearing condition  | Satisfactory  | OK. Grease applied.
+6    | Idler rollers — all sections     | Satisfactory  | 1 idler roller (at 3.2m from tail) slightly noisy. Marked for replacement at next PM. Not critical currently.
+7    | Drive motor — temperature        | Satisfactory  | 62°C at body — within normal limit.
+8    | Drive motor — current draw       | Satisfactory  | 4.2A running load (rated 5.5A). OK.
+9    | Gearbox — oil level              | Satisfactory  | Level OK. No leakage.
+10   | Emergency pull cord — both sides | Satisfactory  | Tested. Both functional.
+11   | Belt guard — both ends           | Satisfactory  | Secure. No damage.
+12   | Frame and support structure      | Satisfactory  | No cracks or corrosion noted.
+13   | Electrical — limit switches      | Satisfactory  | Tested. Operational.
+14   | Housekeeping under conveyor      | Satisfactory  | Minor casting dust. Cleaned during inspection.
+
+--------------------------------------------------------------------------------
+MEASUREMENTS:
+  Belt speed (measured)     : 0.45 m/s (design: 0.45 m/s) — OK
+  Belt tension (deflection) : 18 mm at mid-span (spec: 15–20 mm) — OK
+  Motor bearing temp        : 48°C (limit: <70°C) — OK
+
+--------------------------------------------------------------------------------
+OBSERVATIONS / RECOMMENDATIONS:
+1. One noisy idler roller at 3.2m from tail end — to be replaced at next PM
+   (due Nov 2024, can be scheduled 12-Nov or later this week). Part to be
+   requisitioned from stores (Part No. CONV-IDLR-C04).
+2. Belt centre glazing — surface smoothing from material contact. Not yet
+   affecting grip. If slippage observed, belt replacement to be planned.
+3. Belt tracking adjusted (left drift at head pulley) — minor, common.
+   Monitor at next inspection.
+
+OVERALL CONDITION : SATISFACTORY — NO IMMEDIATE ACTION REQUIRED
+  Conveyor C-04 is fit for continued operation.
+
+PARTS TO BE ORDERED:
+  CONV-IDLR-C04 (Idler Roller for C-04) : 2 Nos. (1 replacement + 1 spare)
+
+--------------------------------------------------------------------------------
+Technician Sign  : Rajesh Sharma
+Date             : 10-Nov-2024
+Manager Sign     : K. Narayanan
+Date             : 10-Nov-2024
+================================================================================

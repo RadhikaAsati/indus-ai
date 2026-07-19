@@ -1,0 +1,126 @@
+INTERNAL EMAIL
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+From    : Vikram Singh <vikram.singh@abcmfg.in>
+To      : G. Iyer <g.iyer@abcmfg.in>
+CC      : Anita Verma <anita.verma@abcmfg.in>;
+          Rajesh Sharma <rajesh.sharma@abcmfg.in>;
+          K. Narayanan <k.narayanan@abcmfg.in>;
+          Priya Menon <priya.menon@abcmfg.in>
+Subject : NCR-2024-0078 — Root Cause Findings & CAPA Update (PL2-NOV-042)
+Date    : 13-Nov-2024
+Time    : 17:22
+================================================================================
+
+Dear Mr. Iyer,
+
+Please find below my findings from the root cause analysis for NCR-2024-0078
+(surface finish non-conformance on batch PL2-NOV-042). This is also relevant
+to the customer complaint CC-2024-0047 received from Kiran Pumps on 11-Nov.
+
+ROOT CAUSE ANALYSIS SUMMARY (5-Why Method):
+
+Problem: Surface finish (Ra) and flatness out of specification on batches
+         PL2-NOV-041 and PL2-NOV-042 (Pump Body PB-7, Pump Line 2).
+
+Why 1: Why was surface finish out of spec?
+  — Insufficient pressing pressure during forming operation on HP-05.
+
+Why 2: Why was pressing pressure insufficient?
+  — HP-05 was operating at 206–210 bar actual (vs. required 220 bar) for
+    a period estimated at 2–4 weeks prior to correction on 05-Nov-2024.
+    (Pressure relief valve was found set at 208 bar on 05-Nov. Gauge reads
+    ~2 bar high per calibration CAL-2024-0156.)
+
+Why 3: Why was the pressure relief valve set lower than specification?
+  — Under investigation. Rajesh Sharma has confirmed no documented adjustment
+    was made. Operators on shift were informally asked — no one admits to
+    adjusting it. Valve drift alone seems unlikely at this magnitude.
+    (Note: valve drift was also not observed in Oct PM — Oct PM noted valve at
+    correct 220 bar setting. This means drift or adjustment occurred between
+    07-Oct and 05-Nov.)
+
+Why 4: Why was the low pressure not detected earlier?
+  — The pressure drop was gradual. Operators noticed fluctuation only on
+    04-Nov. There is no automated alarm on HP-05 for pressure deviation
+    from set point. Operator visual checks of the pressure gauge are not
+    part of the formal pre-shift checklist.
+
+Why 5: Why is there no automated alarm or formal gauge check procedure?
+  — HP-05 is an older press (installed 2017). No automated monitoring
+    was retrofitted. Pre-shift checklist does not include pressure gauge
+    verification.
+
+ROOT CAUSE (Primary): Pressure relief valve operating below required setting
+  for approximately 2–4 weeks, resulting in under-pressed components with
+  surface finish and flatness deviations. Exact cause of valve setting change
+  remains UNCONFIRMED — either undocumented manual adjustment or accelerated
+  valve seat wear.
+
+CONTRIBUTING FACTOR: Absence of formal pressure gauge check in operator
+  pre-shift inspection, allowing low pressure condition to persist undetected.
+
+100% INSPECTION RESULT (Batch PL2-NOV-042):
+  Total inspected : 120 units
+  Accepted        : 109 units
+  For rework      : 8 units (surface regrind — in progress)
+  Scrapped        : 3 units (flatness > 0.10 mm, beyond rework limit)
+
+CAPA ACTIONS (for CAPA report to Kiran Pumps by 18-Nov):
+  1. Immediate: Pressure gauge reading and PRV setting check added to HP-05
+     pre-shift operator checklist with effect from 11-Nov-2024. (Done)
+  2. Short-term: Install pressure transmitter with visual alarm on HP-05
+     HMI — Rajesh Sharma to scope by 22-Nov.
+  3. Short-term: Formal operator training on HP-05 pressure monitoring —
+     Anita Verma to schedule by 15-Nov.
+  4. Long-term: Evaluate replacement of HP-05 PRV with tamper-evident
+     locking type — Rajesh Sharma to recommend.
+  5. Customer replacement: 6 units to be dispatched to Kiran Pumps from
+     batch PL2-NOV-043 (QA cleared — QIR-2024-0401). Arun Desai to arrange
+     dispatch by 14-Nov. (Priya Menon please confirm to customer.)
+
+Hydraulic fluid lab report (FLAB-2024-1108) received today. Fluid showed
+elevated acid number (1.8 mg KOH/g vs. limit of 1.0) and particulate
+contamination above ISO 4406 Class 18/16/13 (target: 17/15/12). Consistent
+with extended use under thermal stress from low-fluid and possible internal
+leakage. This contributed to seal wear and motor heating but is secondary to
+the PRV setting issue for quality non-conformance.
+
+Please let me know if you need anything further before I submit the CAPA report.
+
+Regards,
+Vikram Singh
+Quality Engineer — ABC Manufacturing Pvt. Ltd.
+Mobile: +91-99210-45678
+
+================================================================================
+--- REPLY ---
+
+From    : G. Iyer <g.iyer@abcmfg.in>
+To      : Vikram Singh <vikram.singh@abcmfg.in>
+CC      : All above
+Subject : Re: NCR-2024-0078 — Root Cause Findings & CAPA Update
+Date    : 13-Nov-2024
+Time    : 18:45
+================================================================================
+
+Vikram,
+
+Good structured analysis. A few directions:
+
+1. The unconfirmed cause of PRV setting change is concerning. Even if we cannot
+   establish the exact cause, the CAPA must be robust enough to prevent
+   recurrence regardless. The tamper-evident PRV and pressure alarm are both
+   non-negotiable — please expedite.
+
+2. The 3 scrapped units from PL2-NOV-042 — please confirm scrap disposal per
+   SOP-QA-12 and update the NCR with final disposition.
+
+3. Replacement to Kiran Pumps — ensure CAPA covering letter accompanies the
+   dispatch. I will review the CAPA report draft before submission.
+
+4. Please document all of this formally in the NCR closure report.
+
+G. Iyer
+Production Manager — ABC Manufacturing Pvt. Ltd.
+================================================================================

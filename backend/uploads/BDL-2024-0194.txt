@@ -1,0 +1,61 @@
+MACHINE BREAKDOWN LOG
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Breakdown Log No. : BDL-2024-0194
+Date              : 08-Nov-2024
+Time of Breakdown : 10:45
+Reported By       : Ramesh Pillai (Operator)
+Attended By       : Rajesh Sharma (Maintenance Engineer)
+Equipment         : CNC Machine M-12
+Location          : Shop Floor A, Bay 2
+================================================================================
+
+BREAKDOWN DESCRIPTION:
+  At approximately 10:45, CNC Machine M-12 tripped mid-cycle during machining
+  of shaft blank (batch SHF-NOV-018). Control panel displayed fault code E-047
+  (Spindle Overload). Machine halted automatically. Operator Ramesh Pillai
+  stopped the job and informed Rajesh Sharma immediately.
+
+  Spindle was found hot to touch. Coolant flow to spindle appeared reduced.
+  Coolant reservoir level found at 30% — below the 50% minimum operating level
+  marked on the tank.
+
+TIMELINE:
+  10:45 — Breakdown occurred. Fault code E-047 displayed.
+  10:50 — Rajesh Sharma arrived at machine.
+  11:00 — Initial inspection done. Coolant level low identified as probable cause.
+  11:20 — Coolant (Part No. COOL-SOL-07, 1:20 dilution) topped up (12 Ltrs added).
+           Spindle allowed to cool — 30 minutes rest.
+  11:55 — Machine restarted. Trial run — no fault. Spindle temp normal.
+  12:00 — Machine returned to production.
+
+PROBABLE CAUSE:
+  Insufficient coolant supply leading to spindle thermal overload.
+  Coolant consumption appears higher than usual — last top-up was 25-Oct-2024
+  (approx. 14 days ago, 10 Ltrs added at that time). Normal interval is 21–28
+  days for this machine.
+
+PARTS / MATERIALS USED:
+  COOL-SOL-07 (Water-Soluble Coolant Concentrate): 12 Ltrs
+  Issue Slip : IS-2024-1163
+
+DOWNTIME:
+  Duration          : 1 hour 15 minutes (10:45 – 12:00)
+  Production Impact : 4 shaft blanks lost (batch SHF-NOV-018 delayed)
+
+CORRECTIVE ACTIONS:
+1. Coolant topped up and concentration verified (refractometer check: 5.2% — OK).
+2. Coolant reservoir level to be added to daily operator checklist for M-12.
+3. Check coolant lines and fittings for possible micro-leaks — scheduled for
+   next available slot (target: 11-Nov-2024).
+4. Spindle motor temperature to be monitored for next 3 shifts.
+
+FURTHER MONITORING REQUIRED: YES
+  — Coolant consumption trend to be tracked.
+
+--------------------------------------------------------------------------------
+Technician Sign   : Rajesh Sharma
+Date              : 08-Nov-2024
+Manager Sign      : K. Narayanan
+Date              : 08-Nov-2024
+================================================================================

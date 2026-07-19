@@ -1,0 +1,67 @@
+DISPATCH RECORD
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Dispatch Note No.  : DN-2024-0318
+Date of Dispatch   : 06-Nov-2024
+Dispatched By      : Logistics Team (in-charge: Arun Desai)
+Prepared By        : Arun Desai (Logistics Executive)
+================================================================================
+
+CUSTOMER DETAILS:
+  Customer Name    : Kiran Pumps & Systems Pvt. Ltd.
+  Customer Code    : CUST-0089
+  Customer PO No.  : KPS-PO-4421
+  Delivery Address : Plot 7-B, Satpur Industrial Area, Nashik – 422007
+  Contact Person   : Mr. Harish Nair
+  Phone            : +91-98456-77812
+
+--------------------------------------------------------------------------------
+SHIPMENT DETAILS:
+  Transporter      : Shree Gajanand Roadlines
+  Vehicle No.      : MH-12-AB-4471
+  Driver Name      : Chandrakant Mhatre
+  Driver Mobile    : +91-96570-23341
+  No. of Packages  : 3 (wooden crates — C01, C02, C03)
+  Gross Weight     : 358 kg
+  Expected Delivery: 07-Nov-2024
+
+--------------------------------------------------------------------------------
+ITEMS DISPATCHED:
+--------------------------------------------------------------------------------
+S.No | Item Description          | Part No.   | Batch ID     | UOM | Qty | Crate
+-----|---------------------------|------------|--------------|-----|-----|------
+1    | Industrial Pump Body PB-7 | PROD-PB-07 | PL2-NOV-041  | Nos | 85  | C01, C02, C03
+--------------------------------------------------------------------------------
+
+QUALITY RELEASE:
+  QA Clearance Ref  : QIR-2024-0391 (Conditionally Accepted — 105 units cleared)
+  Units Dispatched  : 85 (of 105 cleared; 20 units retained for subsequent order)
+  Inspected By      : Vikram Singh
+  QA Release Sign   : Vikram Singh
+  Date              : 05-Nov-2024
+
+PACKING DETAILS:
+  Units packed in VCI (Volatile Corrosion Inhibitor) poly bags individually.
+  Each crate lined with foam padding. Crates sealed and banded.
+  Packing List enclosed in Crate C01.
+
+DOCUMENTS ENCLOSED WITH SHIPMENT:
+  1. Invoice No.: INV-2024-0894
+  2. Packing List
+  3. Delivery Challan (2 copies — 1 for customer, 1 driver copy)
+  4. Quality Certificate (QIR-2024-0391 extract)
+
+--------------------------------------------------------------------------------
+REMARKS:
+  - 2 rework units from PL2-NOV-041 were withheld from this dispatch pending
+    final QA clearance. Released internally on 07-Nov-2024.
+  - Dispatch completed as per customer requirement for 06-Nov delivery date.
+
+--------------------------------------------------------------------------------
+Dispatched By    : Arun Desai
+Sign             : Arun Desai
+Date             : 06-Nov-2024
+
+QA Sign          : Vikram Singh
+Date             : 05-Nov-2024
+================================================================================

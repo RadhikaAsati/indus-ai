@@ -2,24 +2,49 @@ from fastapi import APIRouter
 
 from backend.services.investigation import collect_evidence
 from backend.services.evidence_analyzer import analyze_evidence
-from backend.services.entity_linker import link_entities
+from backend.services.timeline_builder import build_timeline
+from backend.services.llm_service import generate_investigation_case
+
 
 router = APIRouter()
+
+
+# Temporarily holds the latest generated investigation.
+# It is NOT permanent organizational memory yet.
+latest_investigation = {}
 
 
 @router.get("/investigation")
 def investigate(query: str):
 
-    # Step 1: Retrieve relevant evidence
+    # 1. Retrieve relevant evidence
     evidence = collect_evidence(query)
 
-    # Step 2: Analyze each chunk
+    # 2. Organize and analyze evidence
     analyzed = analyze_evidence(evidence)
 
-    # Step 3: Connect entities across documents
-    linked_entities = link_entities(analyzed)
+    # 3. Build timeline
+    timeline = build_timeline(analyzed)
 
-    # Step 4: Add linked entities to the response
-    analyzed["linked_entities"] = linked_entities
+    analyzed["timeline"] = timeline
 
-    return analyzed
+    # 4. Let Gemini reason over the evidence
+    llm_result = generate_investigation_case(analyzed)
+
+    # 5. Keep successful result temporarily
+    # until a user approves it for permanent memory.
+    if llm_result.get("success"):
+
+        latest_investigation.clear()
+
+        latest_investigation.update(
+            {
+                "question": query,
+                "case_file": llm_result["case_file"]
+            }
+        )
+
+    return {
+        "investigation_packet": analyzed,
+        "reasoning_result": llm_result
+    }

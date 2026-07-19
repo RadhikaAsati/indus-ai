@@ -1,0 +1,69 @@
+CUSTOMER COMPLAINT RECORD
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Complaint No.   : CC-2024-0047
+Date Received   : 11-Nov-2024
+Received By     : Priya Menon (Customer Service Executive)
+Customer Name   : Kiran Pumps & Systems Pvt. Ltd.
+Customer Code   : CUST-0089
+Contact Person  : Mr. Harish Nair (QA Manager, Kiran Pumps)
+Phone           : +91-98456-77812
+Email           : harish.nair@kiranpumps.co.in
+----------------================================================================
+Product         : Industrial Pump Body (Type PB-7)
+Delivery Note   : DN-2024-0318
+Dispatch Date   : 06-Nov-2024
+Quantity Supplied: 85 units (from batch PL2-NOV-041 — 85 units dispatched)
+Complaint Qty   : 6 units
+================================================================================
+
+COMPLAINT DESCRIPTION (as stated by customer):
+  "We have received the latest lot of PB-7 pump bodies (our PO: KPS-PO-4421,
+  your DN-2024-0318 dated 06-Nov). On incoming inspection, 6 out of 85 units
+  failed our surface finish check. We measure Ra on the bore and mating face.
+  4 units failed bore surface finish (Ra values 3.4–3.7 µm against our limit of
+  3.2 µm) and 2 units had flatness deviation on mating face (0.07–0.09 mm
+  against our limit of 0.05 mm). These are outside the agreed drawing tolerance.
+  We have put these 6 units on hold and need replacement or credit. This is the
+  first time we have seen this issue in your supplies. Please investigate and
+  provide a CAPA report."
+
+--------------------------------------------------------------------------------
+INTERNAL REVIEW — INITIAL NOTES (Priya Menon):
+  - Complaint relates to batch PL2-NOV-041.
+  - QA inspection report for this batch: QIR-2024-0391 (05-Nov-2024).
+  - QIR-2024-0391 flagged marginal surface finish (2 of 10 samples) and 1
+    flatness deviation (reworked in-house). Batch was conditionally accepted.
+  - NCR-2024-0078 raised on 08-Nov for batch PL2-NOV-042 showing worsening
+    surface finish trend — possibly same root cause.
+  - Passed complaint to Vikram Singh (QA) and Anita Verma (Production)
+    for investigation.
+  - Complaint acknowledged to customer via email on 11-Nov-2024.
+
+PRIORITY        : HIGH
+CUSTOMER IMPACT : 6 units on hold at customer end. Risk of line stoppage if
+                  not resolved quickly.
+
+ACTIONS INITIATED:
+1. Vikram Singh (QA) to review complaint units if returned, and correlate
+   with existing NCR-2024-0078 investigation.
+2. Replacement of 6 units to be arranged from next cleared batch (PL2-NOV-043
+   pending QA clearance).
+3. CAPA report to be submitted to customer by 18-Nov-2024.
+
+DISPOSITION:
+  [ ] Replacement
+  [x] Replacement + CAPA report
+  [ ] Credit note
+  [ ] Reject complaint
+
+--------------------------------------------------------------------------------
+Customer Service Sign : Priya Menon
+Date                  : 11-Nov-2024
+
+QA Acknowledgement    : Vikram Singh
+Date                  : 11-Nov-2024
+
+Production Acknowledgement : Anita Verma
+Date                       : 11-Nov-2024
+================================================================================

@@ -1,0 +1,69 @@
+PREVENTIVE MAINTENANCE LOG
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Equipment      : Hydraulic Press HP-05
+Equipment ID   : EQ-HPR-005
+Location       : Shop Floor B, Bay 3
+PM Schedule    : Monthly (every 30 days)
+Log Period     : November 2024
+Technician     : Rajesh Sharma (Maintenance Engineer)
+Reviewed By    : K. Narayanan (Maintenance Manager)
+================================================================================
+
+PM DATE        : 08-Nov-2024
+  (Note: Due date was 07-Nov-2024. Carried out 08-Nov due to MWO-2024-0843
+   corrective work on 05-Nov being counted as partial PM activity. Full PM
+   completed 08-Nov after delivery of parts via PO-2024-0712.)
+Previous PM    : 07-Oct-2024
+Next PM Due    : 08-Dec-2024
+
+--------------------------------------------------------------------------------
+CHECKLIST:
+--------------------------------------------------------------------------------
+S.No | Task                                        | Status   | Remarks
+-----|---------------------------------------------|----------|---------------------------
+1    | Check hydraulic fluid level                 | Done     | Full fluid change done — drained old fluid (darkened/degraded). 40 Ltrs fresh LUB-HYD-46 filled. (8 Ltrs used from earlier top-up on 05-Nov.)
+2    | Check hydraulic fluid condition/colour      | Done     | Old fluid: very dark brown, slight burnt smell. Sent small sample to external lab for analysis (Lab Ref: FLAB-2024-1108). Results expected 12-Nov.
+3    | Inspect all hoses and fittings for leaks    | Done     | No external leaks found. All fittings tight.
+4    | Check pressure relief valve setting         | Done     | Found at 220 bar (set correctly on 05-Nov by Rajesh Sharma). Confirmed stable.
+5    | Lubricate guide columns                     | Done     | Grease applied.
+6    | Check and tighten electrical connections    | Done     | OK.
+7    | Test emergency stop function                | Done     | Functional.
+8    | Inspect and replace ram seal                | Done     | Lower ram seal replaced — SEAL-RAM-HP5-L (1 No. from PO-2024-0712 delivery, VDR-2024-0631). Old seal showed clear wear groove.
+9    | Check pump motor temperature (running)      | Done     | 71°C — within normal range (<75°C). Slightly elevated vs. Oct reading of 68°C. To monitor.
+10   | Clean strainer/filter element               | Done     | Strainer cleaned. Filter element replaced (6-month interval met — previously Feb 2024; Part: FILT-HYD-HP05).
+11   | Verify pressure gauge reading               | Done     | Gauge calibrated 09-Nov (CAL-2024-0156). Slight positive offset confirmed. Reads ~2 bar high. Aware. Actual pressure ~218 bar.
+12   | Record hydraulic fluid consumption          | Done     | Total consumption since Oct PM: ~48 Ltrs (4 Ltrs Oct PM top-up + 8 Ltrs on 05-Nov + 40 Ltrs full change now — old fluid drained). Fluid loss of 12 Ltrs above normal fill confirmed before full change. Internal leakage suspected — ram seal replacement may resolve.
+
+--------------------------------------------------------------------------------
+OBSERVATIONS:
+- Old hydraulic fluid condition was significantly worse than typical for a
+  30-day interval. Degradation may have been ongoing for more than one cycle.
+  Lab results (FLAB-2024-1108) will clarify.
+- Ram seal replacement done. If this was the source of internal leak, fluid
+  consumption should return to normal (2–3 Ltrs per PM cycle) by Dec PM.
+- Pump motor temperature slightly elevated — could be due to running under
+  low-fluid / contaminated fluid condition for several weeks. Expect to
+  normalise over next 2 weeks.
+- Pressure valve drift noted in Oct PM and on 05-Nov is unexplained. No further
+  drift observed. Documented for monitoring.
+
+PARTS CONSUMED THIS PM:
+  LUB-HYD-46 (Hydraulic Fluid ISO VG 46) : 40 Ltrs (Issue Slip IS-2024-1174)
+  SEAL-RAM-HP5-L (Lower Ram Seal)         : 1 No.  (from VDR-2024-0631 stock)
+  FILT-HYD-HP05 (Hydraulic Filter Element): 1 No.  (Issue Slip IS-2024-1174)
+
+OPEN ITEMS:
+  1. Lab analysis of old fluid sample — results due 12-Nov (FLAB-2024-1108).
+  2. 2nd SEAL-RAM-HP5-L (short-supplied by vendor) — expected by 11-Nov.
+     To be kept as spare.
+  3. Monitor pump motor temp over next 2 weeks.
+  4. NCR-2024-0078 (quality) root cause analysis — Rajesh Sharma to provide
+     maintenance input by 12-Nov-2024.
+
+--------------------------------------------------------------------------------
+Technician Sign  : Rajesh Sharma
+Date             : 08-Nov-2024
+Manager Sign     : K. Narayanan
+Date             : 09-Nov-2024
+================================================================================
