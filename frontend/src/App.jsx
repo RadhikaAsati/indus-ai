@@ -137,7 +137,17 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [memoryCases, setMemoryCases] = useState([]);
+  const [memoryLoading, setMemoryLoading] = useState(false);
 
+  const [selectedMemory, setSelectedMemory] = useState(null);
+  const [memoryDetailLoading, setMemoryDetailLoading] = useState(false);
+
+  const [memorySearch, setMemorySearch] = useState("");
+
+  const [savingMemory, setSavingMemory] = useState(false);
+  const [memorySaved, setMemorySaved] = useState(false);
+  const [memoryMessage, setMemoryMessage] = useState("");
   const menuItems = [
     { name: "Overview", icon: "⌂" },
     { name: "Investigate", icon: "⌕" },
@@ -168,6 +178,8 @@ function App() {
     setLoading(true);
     setError("");
     setResult(null);
+    setMemorySaved(false);
+    setMemoryMessage("");
     setInvestigateTab("ask");
 
     try {
@@ -1392,108 +1404,545 @@ const investigateDocument =
   /* =========================================================
      MEMORY
      ========================================================= */
+  /* =========================================================
+   ORGANIZATIONAL MEMORY FUNCTIONS
+   ========================================================= */
 
-  const renderMemory = () => (
-    <div className="workspace-page memory-page">
-      <section className="page-intro compact-intro">
-        <p className="section-label">
-          ORGANIZATIONAL MEMORY
-        </p>
+const loadMemoryCases = async () => {
+  setMemoryLoading(true);
 
-        <h3>
-          Experience should survive beyond the people
-          who originally learned it.
-        </h3>
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/memory/cases`
+    );
 
-        <p>
-          INDUS AI preserves previous investigations as
-          historical knowledge that can guide future reasoning.
-        </p>
-      </section>
+    if (!response.ok) {
+      throw new Error(
+        "Could not load organizational memory."
+      );
+    }
 
-      <section className="memory-principle">
-        <div className="memory-principle-mark">M</div>
+    const data = await response.json();
 
-        <div>
-          <p className="section-label">
-            AN IMPORTANT DISTINCTION
-          </p>
+    setMemoryCases(
+      Array.isArray(data?.cases)
+        ? data.cases
+        : []
+    );
+  } catch (err) {
+    console.error(
+      "Memory loading error:",
+      err
+    );
+  } finally {
+    setMemoryLoading(false);
+  }
+};
 
-          <h4>
-            Historical context is guidance — never current proof.
-          </h4>
 
-          <p>
-            Similar past incidents can reveal recurring patterns
-            and useful verification steps. INDUS AI keeps that
-            knowledge separate from evidence belonging to the
-            current investigation.
-          </p>
+useEffect(() => {
+  loadMemoryCases();
+}, []);
+
+
+const exploreMemoryCase = async (
+  memoryCase
+) => {
+  setMemoryDetailLoading(true);
+  setSelectedMemory(null);
+
+  try {
+    /*
+     * We search using the exact case title.
+     * The backend returns the full stored
+     * memory object.
+     */
+
+    const response = await fetch(
+      `${API_BASE_URL}/memory/search?query=${encodeURIComponent(
+        memoryCase.case_title
+      )}&n_results=3`
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Could not open this memory."
+      );
+    }
+
+    const data = await response.json();
+
+    const matches =
+      data?.memories || [];
+
+    /*
+     * Prefer an exact case ID match.
+     */
+
+    const exactMatch =
+      matches.find(
+        (item) =>
+          item.case_id ===
+          memoryCase.case_id
+      );
+
+    const selected =
+      exactMatch ||
+      matches[0];
+
+    if (!selected?.memory) {
+      throw new Error(
+        "Full memory details were not found."
+      );
+    }
+
+    setSelectedMemory(
+      selected.memory
+    );
+
+  } catch (err) {
+
+    console.error(
+      "Memory detail error:",
+      err
+    );
+
+    setMemoryMessage(
+      err.message ||
+        "Could not open memory."
+    );
+
+  } finally {
+
+    setMemoryDetailLoading(false);
+
+  }
+};
+
+
+const closeMemoryCase = () => {
+  setSelectedMemory(null);
+};
+
+
+const preserveLatestInvestigation =
+  async () => {
+
+    setSavingMemory(true);
+    setMemoryMessage("");
+
+    try {
+
+      const response = await fetch(
+        `${API_BASE_URL}/memory/save-latest`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.detail ||
+            "Could not preserve investigation."
+        );
+      }
+
+      setMemorySaved(true);
+
+      setMemoryMessage(
+        `${data.case_title} has been preserved as organizational memory.`
+      );
+
+      await loadMemoryCases();
+
+    } catch (err) {
+
+      console.error(
+        "Memory save error:",
+        err
+      );
+
+      setMemoryMessage(
+        err.message ||
+          "Could not preserve investigation."
+      );
+
+    } finally {
+
+      setSavingMemory(false);
+
+    }
+  };
+
+
+const searchMemories = async () => {
+
+  if (!memorySearch.trim()) {
+    await loadMemoryCases();
+    return;
+  }
+
+  setMemoryLoading(true);
+
+  try {
+
+    const response = await fetch(
+      `${API_BASE_URL}/memory/search?query=${encodeURIComponent(
+        memorySearch.trim()
+      )}&n_results=10`
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Memory search failed."
+      );
+    }
+
+    const data =
+      await response.json();
+
+    const memories =
+      data?.memories || [];
+
+    setMemoryCases(
+      memories.map(
+        (item) => ({
+          case_id:
+            item.case_id,
+
+          case_title:
+            item.case_title,
+
+          created_at:
+            item.memory?.created_at,
+        })
+      )
+    );
+
+  } catch (err) {
+
+    console.error(
+      "Memory search error:",
+      err
+    );
+
+  } finally {
+
+    setMemoryLoading(false);
+
+  }
+};
+  const renderMemory = () => {
+    if (selectedMemory) {
+      const memoryFacts = selectedMemory.confirmed_facts || [];
+      const memoryWarnings = selectedMemory.historical_warning_signals || [];
+      const memoryHypotheses = selectedMemory.hypotheses || [];
+      const memoryGaps = selectedMemory.unresolved_gaps || [];
+      const memorySources = selectedMemory.source_documents || [];
+      const memoryConfidence = selectedMemory.investigation_confidence || {};
+
+      return (
+        <div className="workspace-page memory-page">
+          <button className="memory-back-button" onClick={closeMemoryCase}>
+            ← Back to Organizational Memory
+          </button>
+
+          <section className="memory-case-hero">
+            <div>
+              <div className="memory-case-meta">
+                <span>HISTORICAL CASE</span>
+                <span>{selectedMemory.case_id}</span>
+              </div>
+              <h3>{selectedMemory.case_title}</h3>
+              {selectedMemory.original_question && (
+                <p className="memory-original-question">
+                  “{selectedMemory.original_question}”
+                </p>
+              )}
+            </div>
+            <div className={`memory-confidence ${getLevelClass(memoryConfidence.level)}`}>
+              <strong>{memoryConfidence.level || "MEMORY"}</strong>
+              <span>CASE CONFIDENCE</span>
+            </div>
+          </section>
+
+          <section className="historical-boundary">
+            <div className="historical-boundary-mark">M</div>
+            <div>
+              <span>HISTORICAL CONTEXT</span>
+              <strong>This case can guide a new investigation. It cannot prove one.</strong>
+              <p>
+                INDUS uses organizational memory to recognize patterns and suggest
+                where to look. Current evidence must still verify every new incident.
+              </p>
+            </div>
+          </section>
+
+          <section className="memory-detail-section">
+            <div className="memory-section-number">01</div>
+            <div className="memory-detail-content">
+              <p className="section-label">WHAT HAPPENED</p>
+              <h3>The case in context.</h3>
+              <p className="memory-assessment">
+                {selectedMemory.executive_assessment || "No executive assessment was preserved."}
+              </p>
+            </div>
+          </section>
+
+          {selectedMemory.organizational_memory_summary && (
+            <section className="memory-learning">
+              <div className="memory-learning-symbol">∞</div>
+              <div>
+                <p className="section-label">WHAT THE ORGANIZATION LEARNED</p>
+                <h3>Remember this next time.</h3>
+                <p>{selectedMemory.organizational_memory_summary}</p>
+              </div>
+            </section>
+          )}
+
+          {memoryWarnings.length > 0 && (
+            <section className="memory-detail-section">
+              <div className="memory-section-number">02</div>
+              <div className="memory-detail-content">
+                <p className="section-label">EARLY WARNING SIGNALS</p>
+                <h3>Signals worth recognizing again.</h3>
+                <div className="memory-warning-grid">
+                  {memoryWarnings.map((item, index) => (
+                    <article className="memory-warning-card" key={index}>
+                      <span>W{String(index + 1).padStart(2, "0")}</span>
+                      <h4>{item.signal}</h4>
+                      <p>{item.why_it_matters}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {memoryHypotheses.length > 0 && (
+            <section className="memory-detail-section">
+              <div className="memory-section-number">03</div>
+              <div className="memory-detail-content">
+                <p className="section-label">PAST REASONING</p>
+                <h3>What investigators considered.</h3>
+                <div className="memory-hypothesis-list">
+                  {memoryHypotheses.map((item, index) => (
+                    <article className="memory-hypothesis" key={index}>
+                      <div className="memory-hypothesis-top">
+                        <span>H{String(index + 1).padStart(2, "0")}</span>
+                        <strong className={getLevelClass(item.confidence)}>
+                          {item.confidence || "UNRATED"}
+                        </strong>
+                      </div>
+                      <h4>{item.hypothesis}</h4>
+                      {item.verification_needed && (
+                        <div className="memory-verification">
+                          <span>VERIFICATION NEEDED</span>
+                          <p>{item.verification_needed}</p>
+                        </div>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {memoryFacts.length > 0 && (
+            <section className="memory-detail-section">
+              <div className="memory-section-number">04</div>
+              <div className="memory-detail-content">
+                <p className="section-label">PRESERVED EVIDENCE</p>
+                <h3>What was confirmed in that case.</h3>
+                <div className="memory-fact-list">
+                  {memoryFacts.map((item, index) => (
+                    <article className="memory-fact" key={index}>
+                      <span className="memory-fact-check">✓</span>
+                      <div>
+                        <p>{item.finding}</p>
+                        {item.sources?.length > 0 && (
+                          <div className="source-tags">
+                            {item.sources.map((source, sourceIndex) => (
+                              <span key={sourceIndex}>
+                                {source.document}
+                                {source.chunk_number !== undefined && ` · chunk ${source.chunk_number}`}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {memoryGaps.length > 0 && (
+            <section className="memory-detail-section">
+              <div className="memory-section-number">05</div>
+              <div className="memory-detail-content">
+                <p className="section-label">WHAT REMAINED UNKNOWN</p>
+                <h3>Uncertainty was preserved too.</h3>
+                <div className="memory-gap-list">
+                  {memoryGaps.map((item, index) => (
+                    <article className="memory-gap" key={index}>
+                      <span>?</span>
+                      <div>
+                        <h4>{item.issue}</h4>
+                        {item.needed_evidence && (
+                          <p><strong>Needed:</strong> {item.needed_evidence}</p>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {memorySources.length > 0 && (
+            <section className="memory-source-footer">
+              <span>SOURCE RECORDS FROM THIS CASE</span>
+              <div>
+                {memorySources.map((source, index) => <strong key={index}>{source}</strong>)}
+              </div>
+            </section>
+          )}
         </div>
-      </section>
+      );
+    }
 
-      {historicalCases.length > 0 ? (
-        <section className="memory-library">
+    return (
+      <div className="workspace-page memory-page">
+        <section className="memory-hero">
+          <div className="memory-hero-copy">
+            <div className="hero-kicker">
+              <span className="hero-line"></span>
+              ORGANIZATIONAL MEMORY
+            </div>
+            <h3>
+              What if every engineer<br />
+              could learn from<br />
+              <span>70 years of experience?</span>
+            </h3>
+            <p>
+              INDUS preserves what past investigations taught the organization —
+              so recurring patterns, warning signals and hard-earned lessons can
+              support the engineer solving today's problem.
+            </p>
+          </div>
+          <div className="memory-hero-stat">
+            <strong>{memoryCases.length}</strong>
+            <span>CASE{memoryCases.length === 1 ? "" : "S"}<br />PRESERVED</span>
+            <div className="memory-pulse"><span></span>MEMORY ACTIVE</div>
+          </div>
+        </section>
+
+        <section className="experience-statement">
+          <span className="experience-symbol">∞</span>
+          <div>
+            <p className="section-label">EXPERIENCE SHOULD NOT RETIRE</p>
+            <h3>People leave.<br />Lessons shouldn't.</h3>
+            <p>
+              Maintenance insight, engineering judgement and lessons from past
+              failures often disappear when experienced people move on. INDUS
+              turns reviewed investigations into reusable organizational memory.
+            </p>
+          </div>
+        </section>
+
+        <section className="memory-search-section">
+          <div>
+            <p className="section-label">SEARCH EXPERIENCE</p>
+            <h4>Ask what the organization<br />has seen before.</h4>
+          </div>
+          <div className="memory-search-box">
+            <input
+              value={memorySearch}
+              onChange={(e) => setMemorySearch(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && searchMemories()}
+              placeholder="e.g. hydraulic pressure, seal wear, quality defect..."
+            />
+            <button onClick={searchMemories}>Search Memory <span>→</span></button>
+          </div>
+        </section>
+
+        <section className="memory-case-library">
           <div className="section-heading-row">
             <div>
-              <p className="section-label">
-                RELATED CASES
-              </p>
-
-              <h4>Knowledge already preserved</h4>
+              <p className="section-label">PAST INVESTIGATIONS</p>
+              <h3>Knowledge already earned.</h3>
             </div>
+            <button className="refresh-library" onClick={() => {
+              setMemorySearch("");
+              loadMemoryCases();
+            }}>Show All</button>
           </div>
 
-          {historicalCases.map((item, index) => (
-            <article
-              className="memory-record"
-              key={index}
-            >
-              <div className="memory-record-number">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-
-              <div>
-                <span className="memory-case-id">
-                  {item.case_id || "HISTORICAL CASE"}
-                </span>
-
-                <h5>
-                  {item.case_title ||
-                    "Historical industrial investigation"}
-                </h5>
-
-                <span className="historical-context-tag">
-                  HISTORICAL CONTEXT
-                </span>
-              </div>
-            </article>
-          ))}
+          {memoryLoading ? (
+            <div className="library-loading">
+              <span className="loading-ring"></span>
+              <p>Searching organizational memory...</p>
+            </div>
+          ) : memoryCases.length > 0 ? (
+            <div className="memory-case-grid">
+              {memoryCases.map((memoryCase, index) => {
+                const date = memoryCase.created_at
+                  ? new Date(memoryCase.created_at).toLocaleDateString(undefined, {
+                      year: "numeric", month: "short", day: "numeric"
+                    })
+                  : "Date unavailable";
+                return (
+                  <article className="memory-case-card" key={memoryCase.case_id}>
+                    <div className="memory-card-top">
+                      <span className="memory-card-index">{String(index + 1).padStart(2, "0")}</span>
+                      <span className="historical-context-tag">HISTORICAL MEMORY</span>
+                    </div>
+                    <span className="memory-card-id">{memoryCase.case_id}</span>
+                    <h4>{memoryCase.case_title}</h4>
+                    <div className="memory-card-footer">
+                      <span>Preserved {date}</span>
+                      <button onClick={() => exploreMemoryCase(memoryCase)}>
+                        Explore Case <strong>→</strong>
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="empty-memory">
+              <span>◉</span>
+              <h4>No matching memory found.</h4>
+              <p>Complete an investigation and preserve it to begin building institutional memory.</p>
+            </div>
+          )}
         </section>
-      ) : (
-        <section className="empty-memory">
-          <span>◉</span>
 
-          <h4>Organizational memory is ready.</h4>
-
-          <p>
-            Related historical cases discovered during an
-            investigation will appear here.
-          </p>
-
-          <button
-            className="secondary-action"
-            onClick={() => {
-              setActivePage("Investigate");
-              setInvestigateTab("ask");
-            }}
-          >
-            Go to Investigate
-          </button>
+        <section className="memory-principle-flow">
+          <div><span className="principle-label">PAST CASE</span><strong>Experience</strong></div>
+          <span className="principle-arrow">→</span>
+          <div><span className="principle-label">PATTERN</span><strong>A clue</strong></div>
+          <span className="principle-arrow">→</span>
+          <div className="current-proof">
+            <span className="principle-label">NEW INCIDENT</span>
+            <strong>Verify with current evidence</strong>
+          </div>
         </section>
-      )}
-    </div>
-  );
+
+        {memoryDetailLoading && (
+          <div className="memory-opening-overlay">
+            <span className="loading-ring"></span>
+            Opening preserved case...
+          </div>
+        )}
+      </div>
+    );
+  };
 
   /* =========================================================
      ASK TAB
@@ -2851,24 +3300,32 @@ const investigateDocument =
 
       {caseFile?.organizational_memory_summary && (
         <section className="knowledge-preserved">
-          <div className="knowledge-symbol">
-            ∞
-          </div>
+          <div className="knowledge-symbol">∞</div>
+          <div className="knowledge-preserved-content">
+            <p className="section-label">KNOWLEDGE WORTH PRESERVING</p>
+            <h3>What should the next engineer know?</h3>
+            <p>{caseFile.organizational_memory_summary}</p>
 
-          <div>
-            <p className="section-label">
-              KNOWLEDGE PRESERVED
-            </p>
-
-            <h3>
-              What the organization should remember.
-            </h3>
-
-            <p>
-              {
-                caseFile.organizational_memory_summary
-              }
-            </p>
+            <div className="preserve-memory-area">
+              <button
+                className={`preserve-memory-button ${memorySaved ? "saved" : ""}`}
+                onClick={preserveLatestInvestigation}
+                disabled={savingMemory || memorySaved}
+              >
+                <span>
+                  <small>
+                    {memorySaved ? "ORGANIZATIONAL MEMORY UPDATED" : "REVIEWED INVESTIGATION"}
+                  </small>
+                  {savingMemory
+                    ? "Preserving knowledge..."
+                    : memorySaved
+                    ? "Preserved in Organizational Memory"
+                    : "Preserve as Organizational Memory"}
+                </span>
+                <strong>{memorySaved ? "✓" : "→"}</strong>
+              </button>
+              {memoryMessage && <p className="memory-save-message">{memoryMessage}</p>}
+            </div>
           </div>
         </section>
       )}
