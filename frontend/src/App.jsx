@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 const API_BASE_URL =
@@ -144,7 +144,17 @@ function App() {
     { name: "Documents", icon: "▤" },
     { name: "Memory", icon: "◉" },
   ];
+  const [documents, setDocuments] = useState([]);
+  const [documentsLoading, setDocumentsLoading] = useState(false);
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadError, setUploadError] = useState("");
+
+  const [isDragging, setIsDragging] = useState(false);
+
+  const fileInputRef = useRef(null);
   /* =========================================================
      RUN INVESTIGATION
      ========================================================= */
@@ -403,87 +413,981 @@ function App() {
   /* =========================================================
      DOCUMENTS
      ========================================================= */
+/* =========================================================
+   DOCUMENT KNOWLEDGE FUNCTIONS
+   ========================================================= */
 
+const loadDocuments = async () => {
+  setDocumentsLoading(true);
+
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/documents`
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Could not load indexed documents."
+      );
+    }
+
+    const data = await response.json();
+
+    setDocuments(
+      Array.isArray(data?.documents)
+        ? data.documents
+        : []
+    );
+  } catch (err) {
+    console.error(
+      "Document loading error:",
+      err
+    );
+  } finally {
+    setDocumentsLoading(false);
+  }
+};
+
+
+useEffect(() => {
+  loadDocuments();
+}, []);
+
+
+const supportedExtensions = [
+  ".pdf",
+  ".txt",
+  ".csv",
+  ".xlsx",
+];
+
+
+const validateFiles = (files) => {
+  const validFiles = [];
+  const invalidFiles = [];
+
+  files.forEach((file) => {
+    const lowerName =
+      file.name.toLowerCase();
+
+    const valid = supportedExtensions.some(
+      (extension) =>
+        lowerName.endsWith(extension)
+    );
+
+    if (valid) {
+      validFiles.push(file);
+    } else {
+      invalidFiles.push(file.name);
+    }
+  });
+
+  if (invalidFiles.length > 0) {
+    setUploadError(
+      `Unsupported file type: ${invalidFiles.join(
+        ", "
+      )}. Use PDF, TXT, CSV or XLSX.`
+    );
+  } else {
+    setUploadError("");
+  }
+
+  return validFiles;
+};
+
+
+const addSelectedFiles = (fileList) => {
+  const incomingFiles = Array.from(
+    fileList || []
+  );
+
+  const validFiles =
+    validateFiles(incomingFiles);
+
+  if (validFiles.length === 0) {
+    return;
+  }
+
+  setSelectedFiles((currentFiles) => {
+    const existingNames = new Set(
+      currentFiles.map(
+        (file) => file.name
+      )
+    );
+
+    const newFiles =
+      validFiles.filter(
+        (file) =>
+          !existingNames.has(file.name)
+      );
+
+    return [
+      ...currentFiles,
+      ...newFiles,
+    ];
+  });
+
+  setUploadMessage("");
+};
+
+
+const handleFileInputChange = (event) => {
+  addSelectedFiles(
+    event.target.files
+  );
+
+  event.target.value = "";
+};
+
+
+const handleDragOver = (event) => {
+  event.preventDefault();
+  setIsDragging(true);
+};
+
+
+const handleDragLeave = (event) => {
+  event.preventDefault();
+  setIsDragging(false);
+};
+
+
+const handleDrop = (event) => {
+  event.preventDefault();
+
+  setIsDragging(false);
+
+  addSelectedFiles(
+    event.dataTransfer.files
+  );
+};
+
+
+const removeSelectedFile = (
+  fileName
+) => {
+  setSelectedFiles(
+    (currentFiles) =>
+      currentFiles.filter(
+        (file) =>
+          file.name !== fileName
+      )
+  );
+};
+
+
+const formatFileSize = (
+  bytes
+) => {
+  if (!bytes) {
+    return "0 KB";
+  }
+
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+
+  if (bytes < 1024 * 1024) {
+    return `${(
+      bytes / 1024
+    ).toFixed(1)} KB`;
+  }
+
+  return `${(
+    bytes /
+    (1024 * 1024)
+  ).toFixed(1)} MB`;
+};
+
+
+const uploadAndIndexDocuments =
+  async () => {
+
+    if (
+      selectedFiles.length === 0
+    ) {
+      setUploadError(
+        "Choose at least one document first."
+      );
+
+      return;
+    }
+
+    setUploading(true);
+    setUploadError("");
+    setUploadMessage(
+      "Uploading documents..."
+    );
+
+    try {
+
+      /*
+       * STEP 1
+       * Upload each selected file.
+       */
+
+      for (
+        const file
+        of selectedFiles
+      ) {
+
+        const formData =
+          new FormData();
+
+        formData.append(
+          "file",
+          file
+        );
+
+        setUploadMessage(
+          `Uploading ${file.name}...`
+        );
+
+        const uploadResponse =
+          await fetch(
+            `${API_BASE_URL}/upload`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+        if (
+          !uploadResponse.ok
+        ) {
+
+          let message =
+            `Could not upload ${file.name}.`;
+
+          try {
+            const errorData =
+              await uploadResponse.json();
+
+            if (
+              errorData?.detail
+            ) {
+              message =
+                errorData.detail;
+            }
+          } catch {
+            // Keep default message.
+          }
+
+          throw new Error(
+            message
+          );
+        }
+      }
+
+      /*
+       * STEP 2
+       * Index all new documents.
+       */
+
+      setUploadMessage(
+        "Connecting new knowledge..."
+      );
+
+      const indexResponse =
+        await fetch(
+          `${API_BASE_URL}/index-documents`,
+          {
+            method: "POST",
+          }
+        );
+
+      if (!indexResponse.ok) {
+        throw new Error(
+          "Documents uploaded, but indexing could not complete."
+        );
+      }
+
+      const indexData =
+        await indexResponse.json();
+
+      console.log(
+        "INDEX RESULT:",
+        indexData
+      );
+
+      /*
+       * STEP 3
+       * Handle indexing failures.
+       */
+
+      if (
+        indexData?.documents_failed >
+        0
+      ) {
+
+        const failedNames =
+          (
+            indexData.failed_files ||
+            []
+          )
+            .map(
+              (item) =>
+                item.file
+            )
+            .join(", ");
+
+        setUploadError(
+          `Some documents could not be indexed: ${failedNames}`
+        );
+      }
+
+      /*
+       * STEP 4
+       * Show useful success message.
+       */
+
+      const indexed =
+        indexData?.documents_indexed ??
+        0;
+
+      const skipped =
+        indexData?.documents_skipped ??
+        0;
+
+      const chunks =
+        indexData?.new_chunks_added ??
+        0;
+
+      if (indexed > 0) {
+
+        setUploadMessage(
+          `${indexed} document${
+            indexed === 1
+              ? ""
+              : "s"
+          } added to the Knowledge Brain · ${chunks} new evidence chunks created.`
+        );
+
+      } else if (
+        skipped > 0
+      ) {
+
+        setUploadMessage(
+          "These documents are already part of the Knowledge Brain."
+        );
+
+      } else {
+
+        setUploadMessage(
+          "Knowledge indexing completed."
+        );
+      }
+
+      /*
+       * STEP 5
+       * Clear selection and refresh library.
+       */
+
+      setSelectedFiles([]);
+
+      await loadDocuments();
+
+    } catch (err) {
+
+      console.error(
+        "Upload/indexing error:",
+        err
+      );
+
+      setUploadError(
+        err.message ||
+          "Could not add knowledge."
+      );
+
+      setUploadMessage("");
+
+    } finally {
+
+      setUploading(false);
+
+    }
+  };
+
+
+const investigateDocument =
+  (filename) => {
+
+    setActivePage(
+      "Investigate"
+    );
+
+    setInvestigateTab(
+      "ask"
+    );
+
+    setQuestion(
+      `Investigate ${filename}. What are the most important findings, risks, anomalies, and connections with other organizational records?`
+    );
+
+    setResult(null);
+    setError("");
+  };
   const renderDocuments = () => (
-    <div className="workspace-page documents-page">
-      <section className="page-intro compact-intro">
-        <p className="section-label">
-          CONNECTED KNOWLEDGE
-        </p>
+  <div className="workspace-page documents-page">
 
-        <h3>
-          Build the knowledge INDUS can investigate.
-        </h3>
+    {/* ================================
+        PAGE INTRO
+        ================================ */}
 
-        <p>
-          Add operational records to the Knowledge Brain.
-          Indexed documents become searchable evidence for
-          future investigations.
-        </p>
-      </section>
+    <section className="page-intro compact-intro">
 
-      <section className="upload-workspace">
-        <div className="upload-icon">+</div>
+      <div className="documents-intro-row">
 
-        <p className="section-label">ADD KNOWLEDGE</p>
+        <div>
 
-        <h4>Drop industrial records here</h4>
+          <p className="section-label">
+            CONNECTED KNOWLEDGE
+          </p>
 
-        <p>
-          PDF, TXT, CSV and XLSX documents can be extracted,
-          indexed and connected to the Knowledge Brain.
-        </p>
+          <h3>
+            Give INDUS something
+            <br />
+            new to remember.
+          </h3>
 
-        <button
-          className="primary-action"
-          type="button"
-        >
-          Choose Files
-          <span>+</span>
-        </button>
+          <p>
+            Add operational records to the
+            Knowledge Brain. Once indexed,
+            they become searchable evidence
+            for every future investigation.
+          </p>
 
-        <span className="upload-note">
-          Upload connection will use the existing indexing
-          pipeline.
-        </span>
-      </section>
-
-      <section className="document-library">
-        <div className="section-heading-row">
-          <div>
-            <p className="section-label">
-              KNOWLEDGE LIBRARY
-            </p>
-
-            <h4>Indexed evidence sources</h4>
-          </div>
-
-          <span className="library-status">
-            <span className="status-dot"></span>
-            Knowledge Brain Ready
-          </span>
         </div>
 
+        <div className="knowledge-count">
+
+          <strong>
+            {documents.length}
+          </strong>
+
+          <span>
+            INDEXED
+            <br />
+            DOCUMENTS
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    {/* ================================
+        UPLOAD AREA
+        ================================ */}
+
+    <section
+      className={`knowledge-drop-zone ${
+        isDragging
+          ? "dragging"
+          : ""
+      }`}
+      onDragOver={handleDragOver}
+      onDragLeave={
+        handleDragLeave
+      }
+      onDrop={handleDrop}
+    >
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept=".pdf,.txt,.csv,.xlsx"
+        onChange={
+          handleFileInputChange
+        }
+        style={{
+          display: "none",
+        }}
+      />
+
+      <div className="drop-zone-mark">
+
+        <span>+</span>
+
+      </div>
+
+      <p className="section-label">
+        ADD KNOWLEDGE
+      </p>
+
+      <h4>
+        Drop industrial records here
+      </h4>
+
+      <p className="drop-description">
+        Maintenance logs, production
+        records, quality reports,
+        engineering data and customer
+        documents.
+      </p>
+
+      <div className="supported-formats">
+
+        <span>PDF</span>
+        <span>TXT</span>
+        <span>CSV</span>
+        <span>XLSX</span>
+
+      </div>
+
+      <button
+        className="primary-action"
+        type="button"
+        disabled={uploading}
+        onClick={() =>
+          fileInputRef.current?.click()
+        }
+      >
+
+        Choose Files
+
+        <span>+</span>
+
+      </button>
+
+      <span className="drop-hint">
+        or drag and drop files anywhere
+        inside this area
+      </span>
+
+    </section>
+
+
+    {/* ================================
+        SELECTED FILES
+        ================================ */}
+
+    {selectedFiles.length > 0 && (
+
+      <section className="selected-knowledge">
+
+        <div className="section-heading-row">
+
+          <div>
+
+            <p className="section-label">
+              READY TO CONNECT
+            </p>
+
+            <h4>
+              {selectedFiles.length} new
+              document
+              {selectedFiles.length === 1
+                ? ""
+                : "s"}
+            </h4>
+
+          </div>
+
+          <span className="selection-count">
+            {
+              selectedFiles.length
+            }{" "}
+            SELECTED
+          </span>
+
+        </div>
+
+        <div className="selected-file-list">
+
+          {selectedFiles.map(
+            (file, index) => (
+
+              <article
+                className="selected-file"
+                key={`${file.name}-${index}`}
+              >
+
+                <div className="file-type-mark">
+
+                  {file.name
+                    .split(".")
+                    .pop()
+                    ?.toUpperCase()}
+
+                </div>
+
+                <div className="selected-file-info">
+
+                  <strong>
+                    {file.name}
+                  </strong>
+
+                  <span>
+                    {formatFileSize(
+                      file.size
+                    )}
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  className="remove-file"
+                  disabled={uploading}
+                  onClick={() =>
+                    removeSelectedFile(
+                      file.name
+                    )
+                  }
+                >
+                  ×
+                </button>
+
+              </article>
+
+            )
+          )}
+
+        </div>
+
+        <button
+          className="connect-knowledge-button"
+          onClick={
+            uploadAndIndexDocuments
+          }
+          disabled={uploading}
+        >
+
+          <span>
+
+            <small>
+              {uploading
+                ? "KNOWLEDGE ENGINE WORKING"
+                : "READY TO INDEX"}
+            </small>
+
+            {uploading
+              ? uploadMessage ||
+                "Connecting knowledge..."
+              : "Connect to Knowledge Brain"}
+
+          </span>
+
+          <strong>
+            {uploading
+              ? "···"
+              : "→"}
+          </strong>
+
+        </button>
+
+      </section>
+
+    )}
+
+
+    {/* ================================
+        STATUS
+        ================================ */}
+
+    {uploadMessage &&
+      selectedFiles.length === 0 && (
+
+        <section className="knowledge-success">
+
+          <div className="success-mark">
+            ✓
+          </div>
+
+          <div>
+
+            <span>
+              KNOWLEDGE BRAIN UPDATED
+            </span>
+
+            <h4>
+              Knowledge connected.
+            </h4>
+
+            <p>
+              {uploadMessage}
+            </p>
+
+          </div>
+
+        </section>
+
+      )}
+
+
+    {uploadError && (
+
+      <section className="knowledge-upload-error">
+
+        <strong>
+          Could not complete the
+          knowledge update
+        </strong>
+
+        <p>
+          {uploadError}
+        </p>
+
+      </section>
+
+    )}
+
+
+    {/* ================================
+        KNOWLEDGE LIBRARY
+        ================================ */}
+
+    <section className="document-library">
+
+      <div className="section-heading-row">
+
+        <div>
+
+          <p className="section-label">
+            KNOWLEDGE LIBRARY
+          </p>
+
+          <h4>
+            Indexed evidence sources
+          </h4>
+
+          <p className="library-description">
+            Every document below can
+            participate in cross-record
+            investigations.
+          </p>
+
+        </div>
+
+        <div className="library-actions">
+
+          <span className="library-status">
+
+            <span className="status-dot">
+            </span>
+
+            Knowledge Brain Ready
+
+          </span>
+
+          <button
+            className="refresh-library"
+            onClick={loadDocuments}
+            disabled={
+              documentsLoading
+            }
+          >
+
+            {documentsLoading
+              ? "Refreshing..."
+              : "Refresh"}
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      {documentsLoading &&
+      documents.length === 0 ? (
+
+        <div className="library-loading">
+
+          <span className="loading-ring">
+          </span>
+
+          <p>
+            Reading the Knowledge Brain...
+          </p>
+
+        </div>
+
+      ) : documents.length > 0 ? (
+
+        <div className="knowledge-library-list">
+
+          {documents.map(
+            (document, index) => (
+
+              <article
+                className="knowledge-document"
+                key={document.filename}
+              >
+
+                <div className="document-index">
+
+                  {String(
+                    index + 1
+                  ).padStart(
+                    2,
+                    "0"
+                  )}
+
+                </div>
+
+                <div className="document-type-icon">
+
+                  <span>
+                    {document.type ||
+                      "DOC"}
+                  </span>
+
+                </div>
+
+                <div className="document-info">
+
+                  <strong>
+                    {
+                      document.filename
+                    }
+                  </strong>
+
+                  <div className="document-meta">
+
+                    <span>
+                      {document.type ||
+                        "DOCUMENT"}
+                    </span>
+
+                    <span>
+                      ·
+                    </span>
+
+                    <span>
+                      {document.chunks ||
+                        0}{" "}
+                      evidence chunks
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <div className="document-state">
+
+                  <span className="indexed-dot">
+                  </span>
+
+                  INDEXED
+
+                </div>
+
+                <button
+                  className="investigate-document"
+                  type="button"
+                  onClick={() =>
+                    investigateDocument(
+                      document.filename
+                    )
+                  }
+                  title={`Investigate ${document.filename}`}
+                >
+
+                  <span>
+                    Investigate
+                  </span>
+
+                  →
+
+                </button>
+
+              </article>
+
+            )
+          )}
+
+        </div>
+
+      ) : (
+
         <div className="document-placeholder">
+
           <div className="document-placeholder-icon">
             ▤
           </div>
 
           <div>
+
             <h5>
-              Document library connection comes next
+              No knowledge indexed yet
             </h5>
 
             <p>
-              Your existing indexed records remain safely stored
-              in ChromaDB. We will connect this workspace to the
-              backend document list and upload route next.
+              Add your first industrial
+              document above.
             </p>
+
           </div>
+
         </div>
-      </section>
-    </div>
-  );
+
+      )}
+
+
+      {documents.length > 0 && (
+
+        <div className="library-summary">
+
+          <div>
+
+            <span>
+              KNOWLEDGE AVAILABLE
+            </span>
+
+            <strong>
+              {documents.length} documents
+              ·{" "}
+              {documents.reduce(
+                (
+                  total,
+                  document
+                ) =>
+                  total +
+                  (document.chunks ||
+                    0),
+                0
+              )}{" "}
+              searchable evidence chunks
+            </strong>
+
+          </div>
+
+          <button
+            className="primary-action"
+            onClick={() => {
+
+              setActivePage(
+                "Investigate"
+              );
+
+              setInvestigateTab(
+                "ask"
+              );
+
+              setQuestion("");
+
+            }}
+          >
+
+            Investigate Knowledge
+
+            <span>→</span>
+
+          </button>
+
+        </div>
+
+      )}
+
+    </section>
+
+  </div>
+);
 
   /* =========================================================
      MEMORY

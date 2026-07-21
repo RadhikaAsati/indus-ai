@@ -430,3 +430,82 @@ def index_documents():
         "failed_files":
             failed_files
     }
+# ---------------------------------------------------------
+# LIST INDEXED DOCUMENTS
+# ---------------------------------------------------------
+
+@router.get("/documents")
+def get_documents():
+    """
+    Return unique documents currently indexed
+    in the INDUS AI Knowledge Brain.
+    """
+
+    existing_data = collection.get(
+        include=["metadatas"]
+    )
+
+    document_chunks = {}
+
+    for metadata in existing_data.get(
+        "metadatas",
+        []
+    ):
+
+        if not metadata:
+            continue
+
+        document_name = metadata.get(
+            "document"
+        )
+
+        if not document_name:
+            continue
+
+        if document_name not in document_chunks:
+
+            document_chunks[
+                document_name
+            ] = 0
+
+        document_chunks[
+            document_name
+        ] += 1
+
+    documents = []
+
+    for document_name, chunk_count in sorted(
+        document_chunks.items()
+    ):
+
+        extension = os.path.splitext(
+            document_name
+        )[1].lower()
+
+        documents.append(
+            {
+                "filename":
+                    document_name,
+
+                "type":
+                    extension.replace(
+                        ".",
+                        ""
+                    ).upper()
+                    or "DOCUMENT",
+
+                "chunks":
+                    chunk_count,
+
+                "status":
+                    "indexed"
+            }
+        )
+
+    return {
+        "total_documents":
+            len(documents),
+
+        "documents":
+            documents
+    }
