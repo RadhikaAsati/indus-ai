@@ -110,6 +110,12 @@ def prepare_evidence(investigation_packet):
                 {}
             ),
 
+        "linked_entities":
+            investigation_packet.get(
+                "linked_entities",
+                {}
+            ),
+
         "documents":
             evidence_documents,
 
@@ -240,6 +246,9 @@ The original document chunk content is the PRIMARY evidence for the
 CURRENT investigation.
 
 Extracted entities and the generated timeline are supporting tools.
+The linked_entities section summarizes cross-document relationships for equipment, work orders, dates, and document references.
+
+Use linked_entities to help identify cross-document patterns, but always verify every conclusion against the original document text.
 
 Entity extraction and timeline generation may contain mistakes.
 

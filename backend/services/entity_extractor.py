@@ -330,10 +330,7 @@ def extract_people(text: str):
 
     return people
 
-
-# ==========================================================
 # MAIN ENTITY EXTRACTION
-# ==========================================================
 
 def extract_entities(text: str) -> Dict[str, List[str]]:
     """

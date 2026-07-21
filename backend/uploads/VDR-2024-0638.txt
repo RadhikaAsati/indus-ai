@@ -1,0 +1,53 @@
+VENDOR DELIVERY RECORD
+ABC Manufacturing Pvt. Ltd.
+================================================================================
+Delivery Record No. : VDR-2024-0638
+Date of Delivery    : 12-Nov-2024
+Time of Delivery    : 09:40
+Against PO No.      : PO-2024-0718
+Vendor              : Deshpande Castings & Components Pvt. Ltd. (VND-0021)
+Vendor Invoice No.  : DCC-INV-2024-1748
+Received By         : Mohit Patel (Store Manager)
+Delivery Location   : WH-A (Raw Material Store), ABC Manufacturing Pvt. Ltd.
+================================================================================
+
+ITEMS RECEIVED:
+--------------------------------------------------------------------------------
+S.No | Item Description                | Part No.      | UOM | PO Qty | Rec. Qty | Condition
+-----|---------------------------------|---------------|-----|--------|----------|----------
+1    | Casting Blank Type CB-14A       | RM-CB-14A     | Nos | 500    | 500      | Good — 10 boxes x 50 Nos. each. No damaged pieces.
+2    | Casting Blank Type CB-09B       | RM-CB-09B     | Nos | 200    | 200      | Good — 4 boxes x 50 Nos.
+3    | Idler Roller for Conveyor C-04  | CONV-IDLR-C04 | Nos | 2      | 2        | Good — bubble-wrapped. Shaft and bearing condition OK on visual.
+--------------------------------------------------------------------------------
+
+INSPECTION AT RECEIPT:
+  CB-14A (Item 1):
+    Material Test Certificate received: DCC-MTC-CB14A-NOV2024.
+    Chemical composition and hardness values reviewed by Vikram Singh (QA).
+    Hardness: 187–193 HB (Spec: 180–200 HB) — PASS.
+    Visual inspection: 10 sample pieces checked — no visible cracks, shrinkage,
+    or surface defects. ACCEPTED.
+
+  CB-09B (Item 2):
+    Material Test Certificate received: DCC-MTC-CB09B-NOV2024.
+    QA spot check: 5 pieces — hardness 174–182 HB (Spec: 170–195 HB) — PASS.
+    ACCEPTED.
+
+  CONV-IDLR-C04 (Item 3):
+    Shaft dia. checked with vernier — matches existing roller spec.
+    Bearing spins freely, no roughness. ACCEPTED.
+    Passed to maintenance store (Rajesh Sharma informed).
+
+UPDATED STOCK LEVELS (after receipt, WH-A):
+  RM-CB-14A     : 80 Nos. (existing) + 500 Nos. = 580 Nos.
+  RM-CB-09B     : 45 Nos. (existing) + 200 Nos. = 245 Nos.
+  CONV-IDLR-C04 : 0 Nos. (existing)  + 2 Nos.  = 2 Nos. (to maintenance store)
+
+Material Receipt Note No. : MRN-2024-0901 (to be raised separately)
+
+--------------------------------------------------------------------------------
+Store Manager Sign  : Mohit Patel
+Date                : 12-Nov-2024
+QA Spot Check Sign  : Vikram Singh
+Date                : 12-Nov-2024
+================================================================================

@@ -1,5 +1,5 @@
 from backend.services.entity_extractor import extract_entities
-
+from backend.services.entity_linker import link_entities
 
 def analyze_evidence(investigation_packet):
     """
@@ -46,6 +46,13 @@ def analyze_evidence(investigation_packet):
 
         analyzed_documents[document_name] = analyzed_chunks
 
+    # NEW: Link entities across all analyzed documents
+    linked_entities = link_entities(
+        {
+            "documents": analyzed_documents
+        }
+    )
+
     return {
         "question": investigation_packet["question"],
 
@@ -55,6 +62,9 @@ def analyze_evidence(investigation_packet):
             key: sorted(list(values))
             for key, values in summary_entities.items()
         },
+
+        # NEW: Structured cross-document entity relationships
+        "linked_entities": linked_entities,
 
         "documents": analyzed_documents
     }
