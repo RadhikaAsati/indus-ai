@@ -40,7 +40,10 @@ def prepare_evidence(investigation_packet):
 
     evidence_documents = []
 
-    documents = investigation_packet.get("documents", {})
+    documents = investigation_packet.get(
+        "documents",
+        {}
+    )
 
     for document_name, chunks in documents.items():
 
@@ -53,30 +56,68 @@ def prepare_evidence(investigation_packet):
 
             document_evidence["evidence"].append(
                 {
-                    "chunk_number": chunk.get("chunk_number"),
-                    "relevance_score": chunk.get("relevance_score"),
+                    "chunk_number":
+                        chunk.get("chunk_number"),
 
-                    "machines": chunk.get("machines", []),
-                    "work_orders": chunk.get("work_orders", []),
-                    "issue_ids": chunk.get("issue_ids", []),
-                    "departments": chunk.get("departments", []),
-                    "dates": chunk.get("dates", []),
-                    "times": chunk.get("times", []),
+                    "relevance_score":
+                        chunk.get("relevance_score"),
+
+                    "machines":
+                        chunk.get("machines", []),
+
+                    "work_orders":
+                        chunk.get("work_orders", []),
+
+                    "issue_ids":
+                        chunk.get("issue_ids", []),
+
+                    "departments":
+                        chunk.get("departments", []),
+
+                    "dates":
+                        chunk.get("dates", []),
+
+                    "times":
+                        chunk.get("times", []),
 
                     # Original document text is always
                     # the primary evidence.
-                    "content": chunk.get("content", "")
+                    "content":
+                        chunk.get("content", "")
                 }
             )
 
-        evidence_documents.append(document_evidence)
+        evidence_documents.append(
+            document_evidence
+        )
 
     return {
-        "question": investigation_packet.get("question", ""),
-        "summary": investigation_packet.get("summary", {}),
-        "entities": investigation_packet.get("entities", {}),
-        "documents": evidence_documents,
-        "timeline": investigation_packet.get("timeline", [])
+        "question":
+            investigation_packet.get(
+                "question",
+                ""
+            ),
+
+        "summary":
+            investigation_packet.get(
+                "summary",
+                {}
+            ),
+
+        "entities":
+            investigation_packet.get(
+                "entities",
+                {}
+            ),
+
+        "documents":
+            evidence_documents,
+
+        "timeline":
+            investigation_packet.get(
+                "timeline",
+                []
+            )
     }
 
 
@@ -353,6 +394,117 @@ similar pressure symptoms, do NOT state that the current machine has
 a seal problem unless current evidence supports it.
 
 
+14. Before writing conclusions, perform a RECORD CONSISTENCY CHECK
+across all supplied CURRENT documents.
+
+Compare records that refer to the same event, equipment, maintenance
+action, batch, or incident.
+
+Specifically compare:
+
+- dates
+- times
+- measurements
+- quantities
+- completion status
+- maintenance actions
+- inspection findings
+- production outcomes
+- quality outcomes
+
+If two current records disagree or appear inconsistent:
+
+- do NOT silently choose one version
+- do NOT merge them into one assumed event
+- report both versions
+- place the issue in "contradictions_and_gaps"
+- state what evidence is needed to resolve the difference
+
+For example:
+
+If one record says an action occurred on 07-Nov and another appears
+to record the same action on 08-Nov, report the date difference.
+
+Do not decide they are the same event unless the evidence confirms it.
+
+
+15. Apply a STRICT CAUSATION CHECK before using words such as:
+
+- caused
+- proved
+- confirmed
+- resulted in
+- led to
+- due to
+- direct cause
+
+Use strong causal wording only when the supplied CURRENT evidence
+directly supports that causal conclusion.
+
+Timing alone does not prove causation.
+
+A component defect found later does not automatically prove that it
+caused an earlier symptom.
+
+A later investigation or RCA may be reported as that document's
+conclusion.
+
+For example:
+
+"The RCA concluded that low forming pressure was the primary cause
+of the quality deviation."
+
+This does NOT automatically mean every earlier pressure problem has
+the same confirmed cause.
+
+When causation is supported but not directly established, use careful
+language such as:
+
+- "may have contributed to"
+- "is consistent with"
+- "supports the possibility that"
+- "suggests a possible connection"
+- "requires verification"
+
+Classify such connections as INFERENCE or HYPOTHESIS, not as
+CONFIRMED FACT.
+
+
+16. Apply a STRICT HISTORICAL MEMORY BOUNDARY.
+
+Historical memory may:
+
+- provide earlier context
+- reveal a similar pattern
+- suggest useful checks
+- preserve previous lessons
+
+Historical memory may NOT:
+
+- confirm a current fact
+- prove a current root cause
+- establish that two incidents share the same cause
+- turn a current inference into a confirmed fact
+- increase certainty unless CURRENT evidence independently supports it
+
+In "historical_case_connections", never say that a past case:
+
+- "confirms"
+- "proves"
+- "establishes"
+
+a fact or cause in the current investigation.
+
+Instead use wording such as:
+
+- "provides earlier context"
+- "shows a similar historical pattern"
+- "is consistent with the current evidence"
+- "suggests this area may be worth checking"
+
+Always preserve what remained uncertain in the historical case.
+
+
 ============================================================
 HISTORICAL ORGANIZATIONAL MEMORY RULES
 ============================================================
@@ -455,6 +607,43 @@ If a historical case is meaningfully related:
 - suggest checks only when appropriate
 
 Do not let historical memory override current evidence.
+
+
+Before producing the final JSON, perform a final evidence audit:
+
+1. Check every CONFIRMED FACT:
+
+   Is it directly supported by current evidence?
+
+2. Check every causal statement:
+
+   Does current evidence actually establish causation, or should the
+   wording be changed to an inference or hypothesis?
+
+3. Check all current records for conflicting:
+
+   - dates
+   - times
+   - measurements
+   - quantities
+   - statuses
+   - maintenance actions
+   - inspection findings
+   - production outcomes
+   - quality outcomes
+
+4. Check every historical case connection:
+
+   Is historical memory being used only as context and experience,
+   never as proof of the current incident?
+
+5. If records disagree, preserve the disagreement explicitly in
+   "contradictions_and_gaps".
+
+Accuracy is more important than producing a neat or fully resolved
+story.
+
+It is acceptable for an investigation to end with uncertainty.
 
 
 ============================================================
@@ -777,7 +966,9 @@ def clean_json_response(text):
 # GENERATE INVESTIGATION CASE
 # ---------------------------------------------------------
 
-def generate_investigation_case(investigation_packet):
+def generate_investigation_case(
+    investigation_packet
+):
     """
     Main LLM reasoning function.
 
@@ -836,7 +1027,8 @@ def generate_investigation_case(investigation_packet):
             contents=prompt,
             config={
                 "temperature": 0.1,
-                "response_mime_type": "application/json"
+                "response_mime_type":
+                    "application/json"
             }
         )
 
@@ -858,42 +1050,55 @@ def generate_investigation_case(investigation_packet):
 
             # Useful for testing/debugging now and
             # showing historical recall later in the UI.
-            "historical_memories_found": len(
-                historical_memories
-            ),
+            "historical_memories_found":
+                len(
+                    historical_memories
+                ),
 
             "historical_memory_cases": [
                 {
-                    "case_id": memory.get(
-                        "case_id",
-                        ""
-                    ),
-                    "case_title": memory.get(
-                        "case_title",
-                        ""
-                    ),
-                    "distance": memory.get(
-                        "distance"
-                    )
+                    "case_id":
+                        memory.get(
+                            "case_id",
+                            ""
+                        ),
+
+                    "case_title":
+                        memory.get(
+                            "case_title",
+                            ""
+                        ),
+
+                    "distance":
+                        memory.get(
+                            "distance"
+                        )
                 }
-                for memory in historical_memories
+
+                for memory in
+                historical_memories
             ],
 
-            "case_file": case_file
+            "case_file":
+                case_file
         }
 
     except json.JSONDecodeError as error:
 
         return {
             "success": False,
-            "error": "Gemini returned invalid JSON.",
-            "details": str(error)
+            "error":
+                "Gemini returned invalid JSON.",
+            "details":
+                str(error)
         }
 
     except Exception as error:
 
         return {
             "success": False,
-            "error": "Investigation reasoning failed.",
-            "details": str(error)
+            "error":
+                "Investigation reasoning failed.",
+            "details":
+                str(error)
         }
