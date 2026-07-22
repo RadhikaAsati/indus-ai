@@ -3,3 +3,11 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+
+# Local ChromaDB vector database
+backend/chroma_db/
+
+# Python / IDE generated files
+.pytest_cache/
+.vscode/
+.idea/
